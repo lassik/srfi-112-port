@@ -1,0 +1,44 @@
+(c-system-include "sys/types.h")
+
+(c-system-include "sys/utsname.h")
+
+(c-system-include "string.h")
+
+(c-declare "
+static struct utsname *my_uname(void) {
+    static struct utsname names;
+    static int init;
+    if (!init) {
+        init = 1;
+        if (uname(&names) == -1) {
+            memset(&names, 0, sizeof(names));
+        }
+    }
+    return &names;
+}
+
+const char *my_uname_sysname(void) {
+    const char *s = my_uname()->sysname;
+    return s ? s : \"\";
+}
+
+const char *my_uname_nodename(void) {
+    const char *s = my_uname()->nodename;
+    return s ? s : \"\";
+}
+
+const char *my_uname_release(void) {
+    const char *s = my_uname()->release;
+    return s ? s : \"\";
+}
+
+const char *my_uname_machine(void) {
+    const char *s = my_uname()->machine;
+    return s ? s : \"\";
+}
+")
+
+(define-c (const string) (%uname-sysname "my_uname_sysname") ())
+(define-c (const string) (%uname-nodename "my_uname_nodename") ())
+(define-c (const string) (%uname-release "my_uname_release") ())
+(define-c (const string) (%uname-machine "my_uname_machine") ())

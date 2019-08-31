@@ -1,1 +1,4 @@
+*.c
+*.dylib
+*.so
 /gambit
