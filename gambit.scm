@@ -31,10 +31,10 @@ c-lambda-end
 ))
 
 (define (implementation-name)
-  "Fantastic Scheme")
+  "Gambit Scheme")
 
 (define (implementation-version)
-  "1.0")
+  (system-version-string))
 
 (define (os-name)
   (vector-ref (%uname) 0))
@@ -48,13 +48,15 @@ c-lambda-end
 (define (cpu-architecture)
   (vector-ref (%uname) 4))
 
-(let loop ((pairs (list (cons 'os-name (os-name))
-                        (cons 'machine-name (machine-name))
-                        (cons 'os-version (os-version))
-                        (cons 'cpu-architecture (cpu-architecture)))))
-  (unless (null? pairs)
-    (display (caar pairs))
-    (display " ")
-    (display (cdar pairs))
-    (newline)
-    (loop (cdr pairs))))
+(define-macro (show query)
+  `(begin (display ',query)
+          (display " ")
+          (display (,query))
+          (newline)))
+
+(show implementation-name)
+(show implementation-version)
+(show os-name)
+(show os-version)
+(show cpu-architecture)
+(show machine-name)
